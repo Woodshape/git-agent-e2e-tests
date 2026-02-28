@@ -1,0 +1,66 @@
+name: git-agent-worker
+run-name: "worker-${{ github.event.inputs.task_id }}-${{ github.event.inputs.subtask_index }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      task_id:
+        description: 'Parent task UUID'
+        required: true
+      subtask_index:
+        description: 'Subtask index (0-based)'
+        required: true
+      subtask:
+        description: 'Subtask description'
+        required: true
+      agent_branch:
+        description: 'Branch name for this agent run'
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  packages: read
+
+jobs:
+  work:
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ vars.WORKER_IMAGE || 'ghcr.io/myuser/git-agent-worker:latest' }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.agent_branch }}
+
+      - name: Trust workspace
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+
+      - name: Run worker
+        env:
+          LLM_PROVIDER: ${{ vars.LLM_PROVIDER || 'ollama' }}
+          LLM_MODEL: ${{ vars.LLM_MODEL || 'llama3.2' }}
+          LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          OLLAMA_URL: ${{ secrets.OLLAMA_URL }}
+          TASK_ID: ${{ github.event.inputs.task_id }}
+          SUBTASK_INDEX: ${{ github.event.inputs.subtask_index }}
+          SUBTASK: ${{ github.event.inputs.subtask }}
+          AGENT_BRANCH: ${{ github.event.inputs.agent_branch }}
+          PLATFORM: github
+          # Set to "true" if using a PAT token and you want the LLM to self-modify your CI workflows
+          ALLOW_WORKFLOW_EDITS: "false"
+          WORK_DIR: ${{ github.workspace }}
+        run: |
+          worker
+
+      - name: Upload worker output
+        uses: actions/upload-artifact@v4
+        with:
+          name: worker-output-${{ github.event.inputs.task_id }}-${{ github.event.inputs.subtask_index }}
+          path: worker-output-${{ github.event.inputs.task_id }}-${{ github.event.inputs.subtask_index }}.json
+          retention-days: 7

@@ -1,0 +1,61 @@
+name: git-agent-claude
+run-name: "claude-${{ github.event.inputs.task_id }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      task_id:
+        description: 'Unique task identifier'
+        required: true
+      task:
+        description: 'Task description for Claude Code'
+        required: true
+      agent_branch:
+        description: 'Branch name for this agent run'
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  claude:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "git-agent[bot]"
+          git config --global user.email "git-agent[bot]@users.noreply.github.com"
+          git checkout -b ${{ github.event.inputs.agent_branch }}
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@v1
+        env:
+          ANTHROPIC_AUTH_TOKEN: ${{ secrets.LLM_API_KEY }}
+          ANTHROPIC_BASE_URL: ${{ vars.LLM_BASE_URL }}
+        with:
+          anthropic_api_key: ${{ secrets.LLM_API_KEY }}
+          prompt: ${{ github.event.inputs.task }}
+          claude_args: --model claude-3-7-sonnet-20250219 --max-turns 30
+          display_report: 'true'
+
+      - name: Push branch
+        if: always()
+        run: |
+          # If Claude made any commits natively, push them.
+          git push origin HEAD:${{ github.event.inputs.agent_branch }} || true
+
+      - name: Open Pull Request
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Try to open a PR if one doesn't exist yet for this branch
+          gh pr create --title "feat: ${{ github.event.inputs.task }}" --body "Autonomous changes by Claude Code" --head ${{ github.event.inputs.agent_branch }} || true
