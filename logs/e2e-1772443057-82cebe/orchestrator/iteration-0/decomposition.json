@@ -1,0 +1,7 @@
+{
+  "subtasks": [
+    "Create a new file called 'e2e-test.txt' in the root directory of the repository.",
+    "Write the text 'E2E test successful' to the 'e2e-test.txt' file."
+  ],
+  "synthesis_hint": "Check that 'e2e-test.txt' is created in the root directory and contains the correct text."
+}
