@@ -1,0 +1,7 @@
+{
+  "subtasks": [
+    "Run the command 'nonexistent-command-12345' and capture the output and error in a log file called 'logs/command_output.log'.",
+    "Check if the command execution resulted in an error. If it did, create a new file named 'fallback.txt' in the root directory and write 'fallback content' into it."
+  ],
+  "synthesis_hint": "Check if 'logs/command_output.log' shows an error for the command execution and verify that 'fallback.txt' is created only if there was an error."
+}
