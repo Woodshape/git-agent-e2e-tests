@@ -1,0 +1,21 @@
+{
+  "task_id": "smoke-1772441723",
+  "subtask_index": 1,
+  "subtask": "Write the following text into 'smoke-test.txt': 'smoke test passed'",
+  "summary": "Completed the task by writing 'smoke test passed' to smoke-test.txt.",
+  "file_writes": {
+    "smoke-test.txt": "smoke test passed"
+  },
+  "step_outputs": [
+    {
+      "Step": {
+        "type": "file_write",
+        "path": "smoke-test.txt",
+        "content": "smoke test passed",
+        "summary": "Wrote 'smoke test passed' to smoke-test.txt."
+      },
+      "Output": "wrote smoke-test.txt (17 bytes)",
+      "Error": ""
+    }
+  ]
+}
