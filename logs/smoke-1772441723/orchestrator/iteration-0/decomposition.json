@@ -1,0 +1,7 @@
+{
+  "subtasks": [
+    "Create a file named 'smoke-test.txt' in the root directory.",
+    "Write the following text into 'smoke-test.txt': 'smoke test passed'"
+  ],
+  "synthesis_hint": "The synthesis step should verify that 'smoke-test.txt' exists and contains the correct text."
+}
