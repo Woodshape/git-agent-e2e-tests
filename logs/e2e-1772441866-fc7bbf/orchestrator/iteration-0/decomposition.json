@@ -1,0 +1,6 @@
+{
+  "subtasks": [
+    "Create a file named 'e2e-test.txt' in the root directory and write the text 'E2E test successful' into it."
+  ],
+  "synthesis_hint": "The synthesis step should verify that the file 'e2e-test.txt' exists and contains the correct text."
+}
