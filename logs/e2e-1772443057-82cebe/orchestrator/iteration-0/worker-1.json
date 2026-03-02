@@ -1,0 +1,21 @@
+{
+  "task_id": "e2e-1772443057-82cebe",
+  "subtask_index": 1,
+  "subtask": "Write the text 'E2E test successful' to the 'e2e-test.txt' file.",
+  "summary": "Wrote 'E2E test successful' to e2e-test.txt.",
+  "file_writes": {
+    "e2e-test.txt": "E2E test successful"
+  },
+  "step_outputs": [
+    {
+      "Step": {
+        "type": "file_write",
+        "path": "e2e-test.txt",
+        "content": "E2E test successful",
+        "summary": "Wrote 'E2E test successful' to e2e-test.txt."
+      },
+      "Output": "wrote e2e-test.txt (19 bytes)",
+      "Error": ""
+    }
+  ]
+}
