@@ -1,0 +1,7 @@
+{
+  "subtasks": [
+    "Create a new file named 'smoke-test.txt' in the root directory and write the text 'Robustness improvements smoke test passed' to it.",
+    "Create a new file named 'RESULTS.md' in the root directory that summarizes the creation of 'smoke-test.txt' and includes a brief description of its content."
+  ],
+  "synthesis_hint": "Ensure the summary in RESULTS.md clearly outlines the purpose of the smoke-test.txt file and references its creation."
+}
